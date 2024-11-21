@@ -1,5 +1,3 @@
-import 'package:beach_rent/widget/form_cliente.dart';
-import 'package:beach_rent/widget/lista_cliente.dart';
 import 'package:beach_rent/widget/login.dart';
 import 'package:flutter/material.dart';
 

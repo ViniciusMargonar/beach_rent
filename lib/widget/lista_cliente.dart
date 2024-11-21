@@ -9,8 +9,10 @@ class ListaCliente extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // Fundo branco
       appBar: AppBar(
         title: const Text('Lista de Clientes'),
+        backgroundColor: const Color(0xFF5CE1E6), // Azul claro
       ),
       body: FutureBuilder<List<DTOCliente>>(
         future: ACliente.consultarClientes(), // Usa o método da classe ACliente
@@ -27,22 +29,50 @@ class ListaCliente extends StatelessWidget {
 
           var lista = snapshot.data!;
           return ListView.builder(
+            padding: const EdgeInsets.all(16.0),
             itemCount: lista.length,
             itemBuilder: (context, index) {
               var cliente = lista[index];
-              return ListTile(
-                leading: const Icon(Icons.person),
-                title: Text(cliente.nome),
-                subtitle: Text(cliente.email),
-                onTap: () {
-                  // Navega para a página de detalhes do cliente
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetalhesCliente(cliente: cliente),
+              return Card(
+                color: const Color(0xFF5CE1E6), // Azul claro
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(16.0),
+                  leading: const Icon(
+                    Icons.person,
+                    color: Color(0xFF025162), // Azul escuro
+                  ),
+                  title: Text(
+                    cliente.nome,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF025162), // Azul escuro
                     ),
-                  );
-                },
+                  ),
+                  subtitle: Text(
+                    cliente.email,
+                    style: const TextStyle(
+                      fontSize: 14.0,
+                      color: Color(0xFF025162), // Azul escuro
+                    ),
+                  ),
+                  trailing: const Icon(
+                    Icons.arrow_forward,
+                    color: Color(0xFF025162), // Azul escuro
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetalhesCliente(clienteId: cliente.id),
+                      ),
+                    );
+                  },
+                ),
               );
             },
           );

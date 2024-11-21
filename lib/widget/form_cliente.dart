@@ -1,8 +1,7 @@
 import 'package:beach_rent/widget/lista_cliente.dart';
 import 'package:flutter/material.dart';
-import 'package:beach_rent/banco/sqlite/conexao.dart';
+import 'package:beach_rent/banco/sqlite/dao_cliente.dart';
 import 'package:beach_rent/dominio/dto/dto_cliente.dart';
-import 'package:beach_rent/banco/sqlite/dao_cliente.dart'; // Certifique-se de importar a classe DAOCliente corretamente
 
 class FormCliente extends StatefulWidget {
   const FormCliente({super.key});
@@ -20,9 +19,8 @@ class _FormClienteState extends State<FormCliente> {
 
   Future<void> _salvarCliente() async {
     if (_formKey.currentState!.validate()) {
-      // Cria o DTOCliente com os dados do formulário
       final cliente = DTOCliente(
-        id: null, // O ID será gerado automaticamente no banco
+        id: null,
         nome: _nomeController.text,
         email: _emailController.text,
         telefone: _telefoneController.text,
@@ -30,23 +28,19 @@ class _FormClienteState extends State<FormCliente> {
       );
 
       try {
-        // Salva o cliente no banco de dados
         final dao = DAOCliente();
         await dao.salvar(cliente);
 
-        // Exibe mensagem de sucesso
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Cliente cadastrado com sucesso!')),
         );
 
-        // Limpa os campos após o cadastro
         _formKey.currentState!.reset();
         _nomeController.clear();
         _emailController.clear();
         _telefoneController.clear();
         _senhaController.clear();
       } catch (e) {
-        // Exibe mensagem de erro
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Erro ao salvar cliente: $e')),
         );
@@ -57,59 +51,136 @@ class _FormClienteState extends State<FormCliente> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // Fundo branco
       appBar: AppBar(
-        title: const Text('Cadastro de Cliente'),
+        title: const Text('Voltar'),
+        backgroundColor: const Color(0xFF5CE1E6), // Azul escuro
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: _nomeController,
-                decoration: const InputDecoration(labelText: 'Nome'),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Informe o nome' : null,
-              ),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Informe o email' : null,
-              ),
-              TextFormField(
-                controller: _telefoneController,
-                decoration: const InputDecoration(labelText: 'Telefone'),
-                keyboardType: TextInputType.phone,
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Informe o telefone'
-                    : null,
-              ),
-              TextFormField(
-                controller: _senhaController,
-                decoration: const InputDecoration(labelText: 'Senha'),
-                obscureText: true,
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Informe a senha' : null,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _salvarCliente,
-                child: const Text('Cadastrar Cliente'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ListaCliente()),
-                  );
-                },
-                child: const Text('Voltar para a Lista de Clientes'),
-              ),
-            ],
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Cadastrar Cliente',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF025162),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24.0), // Espaçamento entre o título e os inputs
+                TextFormField(
+                  controller: _nomeController,
+                  decoration: InputDecoration(
+                    labelText: 'Nome',
+                    labelStyle: const TextStyle(color: Color(0xFF025162)),
+                    filled: true,
+                    fillColor: const Color(0xFF5CE1E6),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Informe o nome' : null,
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    labelStyle: const TextStyle(color: Color(0xFF025162)),
+                    filled: true,
+                    fillColor: const Color(0xFF5CE1E6),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Informe o email' : null,
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _telefoneController,
+                  decoration: InputDecoration(
+                    labelText: 'Telefone',
+                    labelStyle: const TextStyle(color: Color(0xFF025162)),
+                    filled: true,
+                    fillColor: const Color(0xFF5CE1E6),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Informe o telefone' : null,
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _senhaController,
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    labelStyle: const TextStyle(color: Color(0xFF025162)),
+                    filled: true,
+                    fillColor: const Color(0xFF5CE1E6),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  obscureText: true,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Informe a senha' : null,
+                ),
+                const SizedBox(height: 24.0),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _salvarCliente,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF5CE1E6),
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: const Text(
+                      'Cadastrar Cliente',
+                      style: TextStyle(
+                        color: Color(0xFF025162),
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ListaCliente()),
+                    );
+                  },
+                  child: const Text(
+                    'Voltar para a Lista de Clientes',
+                    style: TextStyle(
+                      color: Color(0xFF025162),
+                      fontSize: 14.0,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

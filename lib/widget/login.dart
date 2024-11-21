@@ -1,3 +1,4 @@
+import 'package:beach_rent/widget/home_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
@@ -59,7 +60,12 @@ class LoginPage extends StatelessWidget {
                 width: double.infinity, // Define a largura igual à dos TextFields
                 child: ElevatedButton(
                   onPressed: () {
-                    // Lógica do login
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF5CE1E6), // Azul claro para o botão
