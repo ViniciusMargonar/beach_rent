@@ -10,7 +10,7 @@ class DAOCliente implements IDAOCliente {
   Future<DTOCliente> salvar(DTOCliente dto) async{
     _db = await Conexao.abrir();
     int id = await _db.rawInsert(
-      'INSERT INTO professor (nome, email, telefone, senha) VALUES (?,?,?,?)', [dto.nome, dto.email, dto.telefone, dto.senha]
+      'INSERT INTO cliente (nome, email, telefone, senha) VALUES (?,?,?,?)', [dto.nome, dto.email, dto.telefone, dto.senha]
     );
     dto.id = id;
     return dto;

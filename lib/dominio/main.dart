@@ -1,3 +1,4 @@
+import 'package:beach_rent/widget/form_cliente.dart';
 import 'package:beach_rent/widget/lista_cliente.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         useMaterial3: true,
       ),
-      home: const ListaCliente(),
+      home: const FormCliente(),
     );
   }
 }
