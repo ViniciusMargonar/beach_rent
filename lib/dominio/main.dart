@@ -1,5 +1,6 @@
 import 'package:beach_rent/widget/form_cliente.dart';
 import 'package:beach_rent/widget/lista_cliente.dart';
+import 'package:beach_rent/widget/login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         useMaterial3: true,
       ),
-      home: const FormCliente(),
+      home: LoginPage(),
     );
   }
 }
