@@ -17,15 +17,12 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'Beach Rent!',
-                style: TextStyle(
-                  fontSize: 28.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF025162), // Cor do título
-                ),
+              // Adiciona a imagem acima do título
+              Image.asset(
+                'lib/components/BeachRent.png', // Caminho da imagem
+                height: 250.0, // Altura da imagem
               ),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 1.0),
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
