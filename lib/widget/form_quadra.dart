@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:beach_rent/dominio/dto/dto_quadra.dart';
 import 'package:beach_rent/banco/sqlite/dao_quadra.dart';
+import 'lista_quadra.dart'; // Certifique-se de importar a página da lista de quadras
 
 class FormQuadra extends StatefulWidget {
   const FormQuadra({super.key});
@@ -159,6 +160,25 @@ class _FormQuadraState extends State<FormQuadra> {
                         color: Color(0xFF025162),
                         fontSize: 16.0,
                       ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ListaQuadra(), // Página de lista de quadras
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Ver Lista de Quadras',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Color(0xFF025162),
+                      decoration: TextDecoration.underline,
                     ),
                   ),
                 ),

@@ -171,7 +171,7 @@ class _FormClienteState extends State<FormCliente> {
                     );
                   },
                   child: const Text(
-                    'Voltar para a Lista de Clientes',
+                    'Ver Lista de Clientes',
                     style: TextStyle(
                       color: Color(0xFF025162),
                       fontSize: 14.0,
