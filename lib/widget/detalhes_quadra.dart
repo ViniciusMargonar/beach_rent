@@ -3,13 +3,15 @@ import 'package:beach_rent/aplicacao/a_quadra.dart';
 import 'package:beach_rent/dominio/dto/dto_quadra.dart';
 
 class DetalhesQuadra extends StatelessWidget {
-  final String quadraId; // Recebe o ID da quadra
+  final int quadraId; // Recebe o ID da quadra como int
 
   const DetalhesQuadra({super.key, required this.quadraId});
 
-  Future<DTOQuadra?> _buscarDetalhesQuadra(String id) async {
+  // Altere o tipo do parâmetro para int
+  Future<DTOQuadra?> _buscarDetalhesQuadra(int id) async {
     try {
       final quadras = await AQuadra.consultarQuadras();
+      // Certifique-se de que a comparação seja feita entre dois int
       return quadras.firstWhere((quadra) => quadra.id == id);
     } catch (e) {
       print('Erro ao buscar detalhes da quadra: $e');
@@ -26,7 +28,7 @@ class DetalhesQuadra extends StatelessWidget {
         backgroundColor: const Color(0xFF5CE1E6), // Azul claro
       ),
       body: FutureBuilder<DTOQuadra?>(
-        future: _buscarDetalhesQuadra(quadraId),
+        future: _buscarDetalhesQuadra(quadraId), // Passa o int diretamente
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
