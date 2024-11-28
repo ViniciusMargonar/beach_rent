@@ -18,9 +18,8 @@ class DAOCliente implements IDAOCliente {
   }
 
   @override
-  Future<DTOCliente> deletar(DTOCliente dto) async {  // Usando o DTOCliente
+  Future<int> deletar(int id) async {  // Usando o int id
     _db = await Conexao.abrir();
-    await _db.rawDelete('DELETE FROM cliente WHERE id = ?', [dto.id]);  // Acessando o id do DTOCliente
-    return dto;
+    return await _db.rawDelete('DELETE FROM cliente WHERE id = ?', [id]);
   }
 }

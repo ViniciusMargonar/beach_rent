@@ -3,11 +3,11 @@ import 'package:beach_rent/aplicacao/a_cliente.dart';
 import 'package:beach_rent/dominio/dto/dto_cliente.dart';
 
 class DetalhesCliente extends StatelessWidget {
-  final String clienteId; // Agora recebe apenas o ID do cliente
+  final int clienteId; // Agora recebe apenas o ID do cliente
 
   const DetalhesCliente({super.key, required this.clienteId});
 
-  Future<DTOCliente?> _buscarDetalhesCliente(String id) async {
+  Future<DTOCliente?> _buscarDetalhesCliente(int id) async {
     try {
       final clientes = await ACliente.consultarClientes();
       // Lança uma exceção caso não encontre o cliente

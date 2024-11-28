@@ -10,7 +10,7 @@ class ACliente {
 
       // Converte o resultado para uma lista de DTOCliente
       return result.map((json) => DTOCliente(
-            id: json['id'].toString(),
+            id: json['id'],
             nome: json['nome'].toString(),
             email: json['email'].toString(),
             telefone: json['telefone'].toString(),
