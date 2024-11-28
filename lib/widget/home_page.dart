@@ -34,9 +34,10 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Botão Lista de Clientes
               SizedBox(
                 width: double.infinity, // Botões com largura total
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -52,16 +53,33 @@ class HomePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  child: const Text(
-                    'Lista de Clientes',
-                    style: TextStyle(fontSize: 16.0, color: Color(0xFF025162)),
+                  icon: const Padding(
+                    padding: EdgeInsets.only(left: 16.0), // Ajuste o valor aqui
+                    child: Icon(
+                      Icons.people,
+                      color: Color(0xFF025162),
+                    ),
+                  ),
+                  label: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Lista de Clientes',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Color(0xFF025162),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
               const SizedBox(height: 16.0),
+
+              // Botão Formulário de Cliente
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -77,16 +95,33 @@ class HomePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  child: const Text(
-                    'Formulário de Cliente',
-                    style: TextStyle(fontSize: 16.0, color: Color(0xFF025162)),
+                  icon: const Padding(
+                    padding: EdgeInsets.only(left: 16.0), // Ajuste o valor aqui
+                    child: Icon(
+                      Icons.add_circle,
+                      color: Color(0xFF025162),
+                    ),
+                  ),
+                  label: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Formulário de Cliente',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Color(0xFF025162),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
               const SizedBox(height: 16.0),
+
+              // Botão Lista de Quadras
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -102,16 +137,33 @@ class HomePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  child: const Text(
-                    'Lista de Quadras',
-                    style: TextStyle(fontSize: 16.0, color: Color(0xFF025162)),
+                  icon: const Padding(
+                    padding: EdgeInsets.only(left: 16.0), // Ajuste o valor aqui
+                    child: Icon(
+                      Icons.sports,
+                      color: Color(0xFF025162),
+                    ),
+                  ),
+                  label: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Lista de Quadras',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Color(0xFF025162),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
               const SizedBox(height: 16.0),
+
+              // Botão Formulário de Quadra
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -127,9 +179,24 @@ class HomePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  child: const Text(
-                    'Formulário de Quadra',
-                    style: TextStyle(fontSize: 16.0, color: Color(0xFF025162)),
+                  icon: const Padding(
+                    padding: EdgeInsets.only(left: 16.0), // Ajuste o valor aqui
+                    child: Icon(
+                      Icons.add_circle,
+                      color: Color(0xFF025162),
+                    ),
+                  ),
+                  label: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Formulário de Quadra',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Color(0xFF025162),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
