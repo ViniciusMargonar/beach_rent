@@ -6,8 +6,33 @@ import 'package:beach_rent/dominio/quadra.dart';
 
 class DAOQuadra implements IDAOQuadra {
   @override
-  DTOQuadra salvar(DTOQuadra dto) {
-  return dto;
+  @override
+  Future<DTOQuadra> salvar(DTOQuadra dto) async {
+    return dto;
+  }
+  
+  @override
+  Future<int> atualizar(DTOQuadra dto) {
+    // TODO: implement atualizar
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<DTOQuadra?> buscarPorId(int id) {
+    // TODO: implement buscarPorId
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<int> deletar(int id) {
+    // TODO: implement deletar
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<List<DTOQuadra>> listarTodos() {
+    // TODO: implement listarTodos
+    throw UnimplementedError();
   }
 }
 

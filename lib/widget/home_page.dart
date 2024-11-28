@@ -2,6 +2,8 @@ import 'package:beach_rent/widget/lista_cliente.dart';
 import 'package:beach_rent/widget/login.dart';
 import 'package:flutter/material.dart';
 import 'form_cliente.dart';
+import 'form_quadra.dart';
+import 'lista_quadra.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -86,9 +88,10 @@ class HomePage extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Lista de Quadras ainda não implementada!'),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ListaQuadra(),
                       ),
                     );
                   },
@@ -110,9 +113,10 @@ class HomePage extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Formulário de Quadras ainda não implementado!'),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FormQuadra(),
                       ),
                     );
                   },

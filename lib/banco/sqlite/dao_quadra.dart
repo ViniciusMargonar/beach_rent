@@ -1,90 +1,86 @@
+import 'package:beach_rent/banco/sqlite/conexao.dart';
 import 'package:beach_rent/dominio/dto/dto_quadra.dart';
+import 'package:beach_rent/dominio/interface/i_dao_quadra.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 
-class DAOQuadra {
-  static final DAOQuadra _instance = DAOQuadra._internal();
-  factory DAOQuadra() => _instance;
-  DAOQuadra._internal();
+class DAOQuadra implements IDAOQuadra {
+  late Database _db;
 
-  Database? _database;
-
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDatabase();
-    return _database!;
+  @override
+  Future<DTOQuadra> salvar(DTOQuadra dto) async {
+    _db = await Conexao.abrir();
+    int id = await _db.rawInsert(
+      'INSERT INTO quadra (nome, precoPorHora, tipoDePiso, descricao, capacidadeDeJogadores, disponibilidade, cobertura) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+      [
+        dto.nome,
+        dto.precoPorHora,
+        dto.tipoDePiso,
+        dto.descricao,
+        dto.capacidadeDeJogadores,
+        dto.disponibilidade ? 1 : 0,
+        dto.cobertura ? 1 : 0
+      ]
+    );
+    dto.id = id;
+    return dto;
   }
 
-  Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'quadra_database.db');
-    return await openDatabase(
-      path,
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE quadra(id INTEGER PRIMARY KEY, nome TEXT, precoPorHora REAL, tipoDePiso TEXT, descricao TEXT, capacidadeDeJogadores INTEGER, disponibilidade TEXT, cobertura TEXT)',
-        );
-      },
-      version: 1,
+  @override
+  Future<int> atualizar(DTOQuadra dto) async {
+    _db = await Conexao.abrir();
+    return await _db.rawUpdate(
+      'UPDATE quadra SET nome = ?, precoPorHora = ?, tipoDePiso = ?, descricao = ?, capacidadeDeJogadores = ?, disponibilidade = ?, cobertura = ? WHERE id = ?',
+      [
+        dto.nome,
+        dto.precoPorHora,
+        dto.tipoDePiso,
+        dto.descricao,
+        dto.capacidadeDeJogadores,
+        dto.disponibilidade ? 1 : 0,
+        dto.cobertura ? 1 : 0,
+        dto.id
+      ]
     );
   }
 
-  Future<void> insertQuadra(DTOQuadra quadra) async {
-    final db = await database;
-    await db.insert(
-      'quadra',
-      quadra.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+  @override
+  Future<int> deletar(int id) async {
+    _db = await Conexao.abrir();
+    return await _db.rawDelete('DELETE FROM quadra WHERE id = ?', [id]);
   }
 
-  Future<List<DTOQuadra>> quadras() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('quadra');
-    return List.generate(maps.length, (i) {
+  @override
+  Future<DTOQuadra?> buscarPorId(int id) async {
+    _db = await Conexao.abrir();
+    List<Map<String, dynamic>> result = await _db.rawQuery('SELECT * FROM quadra WHERE id = ?', [id]);
+    if (result.isNotEmpty) {
       return DTOQuadra(
-        id: maps[i]['id'],
-        nome: maps[i]['nome'],
-        precoPorHora: maps[i]['precoPorHora'],
-        tipoDePiso: maps[i]['tipoDePiso'],
-        descricao: maps[i]['descricao'],
-        capacidadeDeJogadores: maps[i]['capacidadeDeJogadores'],
-        disponibilidade: maps[i]['disponibilidade'],
-        cobertura: maps[i]['cobertura'],
+        id: result[0]['id'],
+        nome: result[0]['nome'],
+        precoPorHora: result[0]['precoPorHora'],
+        tipoDePiso: result[0]['tipoDePiso'],
+        descricao: result[0]['descricao'],
+        capacidadeDeJogadores: result[0]['capacidadeDeJogadores'],
+        disponibilidade: result[0]['disponibilidade'] == 1,
+        cobertura: result[0]['cobertura'] == 1,
       );
-    });
+    }
+    return null;
   }
 
-  Future<void> updateQuadra(DTOQuadra quadra) async {
-    final db = await database;
-    await db.update(
-      'quadra',
-      quadra.toMap(),
-      where: 'id = ?',
-      whereArgs: [quadra.id],
-    );
-  }
-
-  Future<void> deleteQuadra(int id) async {
-    final db = await database;
-    await db.delete(
-      'quadra',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-}
-
-extension on DTOQuadra {
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'nome': nome,
-      'precoPorHora': precoPorHora,
-      'tipoDePiso': tipoDePiso,
-      'descricao': descricao,
-      'capacidadeDeJogadores': capacidadeDeJogadores,
-      'disponibilidade': disponibilidade,
-      'cobertura': cobertura,
-    };
+  @override
+  Future<List<DTOQuadra>> listarTodos() async {
+    _db = await Conexao.abrir();
+    List<Map<String, dynamic>> result = await _db.rawQuery('SELECT * FROM quadra');
+    return result.map((map) => DTOQuadra(
+      id: map['id'],
+      nome: map['nome'],
+      precoPorHora: map['precoPorHora'],
+      tipoDePiso: map['tipoDePiso'],
+      descricao: map['descricao'],
+      capacidadeDeJogadores: map['capacidadeDeJogadores'],
+      disponibilidade: map['disponibilidade'] == 1,
+      cobertura: map['cobertura'] == 1,
+    )).toList();
   }
 }
