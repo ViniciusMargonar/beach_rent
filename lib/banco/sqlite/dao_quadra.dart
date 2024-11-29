@@ -83,4 +83,5 @@ class DAOQuadra implements IDAOQuadra {
       cobertura: map['cobertura'] == 1,
     )).toList();
   }
+  
 }

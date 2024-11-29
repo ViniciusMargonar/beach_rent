@@ -1,6 +1,7 @@
 import 'package:beach_rent/widget/lista_cliente.dart';
 import 'package:beach_rent/widget/login.dart';
 import 'package:flutter/material.dart';
+import 'package:pie_chart/pie_chart.dart';  // Importando o pacote PieChart
 import 'form_cliente.dart';
 import 'form_quadra.dart';
 import 'lista_quadra.dart';
@@ -10,6 +11,12 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Dados para o gráfico de pizza
+    Map<String, double> dataMap = {
+      "Disponíveis": 15,
+      "Indisponíveis": 8,
+    };
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -34,6 +41,25 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Adicionando o PieChart acima dos botões
+              PieChart(
+                dataMap: dataMap,
+                chartType: ChartType.disc,
+                chartRadius: MediaQuery.of(context).size.width / 3,
+                colorList: const [Color.fromARGB(255, 27, 254, 122), Color.fromARGB(255, 255, 74, 74)],
+                chartValuesOptions: ChartValuesOptions(
+                  showChartValues: true,
+                  showChartValuesInPercentage: false,
+                  showChartValuesOutside: false,
+                  decimalPlaces: 1,
+                  chartValueStyle: defaultChartValueStyle.copyWith(
+                    color: Colors.black,
+                  ),
+                ),
+                initialAngleInDegree: 0,
+              ),
+              const SizedBox(height: 32.0), // Espaçamento após o gráfico de pizza
+
               // Botão Lista de Clientes
               SizedBox(
                 width: double.infinity, // Botões com largura total
