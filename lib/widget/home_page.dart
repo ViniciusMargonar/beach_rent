@@ -19,7 +19,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Map<String, double> dataMap = {};
-  late int numeroClientes = 0;  // Variável para armazenar o número de clientes
+  late int numeroClientes = 0;
+  late double receitaEmReservas = 0.0; // Variável para armazenar a receita
 
   // Função para buscar quadras e atualizar o gráfico de pizza
   Future<void> fetchQuadras() async {
@@ -29,11 +30,15 @@ class _HomePageState extends State<HomePage> {
     int disponiveis = quadras.where((quadra) => quadra.disponibilidade).length;
     int indisponiveis = quadras.length - disponiveis;
 
+    // Calcular a soma do preço por hora das quadras
+    double totalPrecoPorHora = quadras.fold(0.0, (sum, quadra) => sum + quadra.precoPorHora);
+
     setState(() {
       dataMap = {
         "Disponíveis": disponiveis.toDouble(),
         "Indisponíveis": indisponiveis.toDouble(),
       };
+      receitaEmReservas = totalPrecoPorHora; // Atualizar a receita
     });
   }
 
@@ -77,51 +82,104 @@ class _HomePageState extends State<HomePage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Exibir o gráfico de pizza com os dados atualizados
-              dataMap.isEmpty
-                  ? const CircularProgressIndicator()
-                  : PieChart(
-                      dataMap: dataMap,
-                      chartType: ChartType.disc,
-                      chartRadius: MediaQuery.of(context).size.width / 3,
-                      colorList: const [
-                        Color.fromARGB(255, 27, 254, 122),
-                        Color.fromARGB(255, 255, 74, 74)
-                      ],
-                      chartValuesOptions: ChartValuesOptions(
-                        showChartValues: true,
-                        showChartValuesInPercentage: false,
-                        showChartValuesOutside: false,
-                        decimalPlaces: 1,
-                        chartValueStyle: defaultChartValueStyle.copyWith(
-                          color: Colors.black,
-                        ),
-                      ),
-                      initialAngleInDegree: 0,
-                    ),
-              const SizedBox(height: 32.0), // Espaçamento após o gráfico de pizza
-
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    // Título acima do gráfico de pizza
+    const Text(
+      'Disponibilidade das Quadras',
+      style: TextStyle(
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+        color: Color(0xFF025162),
+      ),
+    ),
+    const SizedBox(height: 16.0), // Espaçamento entre o título e o gráfico de pizza
+    // Exibir o gráfico de pizza com os dados atualizados
+    dataMap.isEmpty
+        ? const CircularProgressIndicator()
+        : PieChart(
+            dataMap: dataMap,
+            chartType: ChartType.disc,
+            chartRadius: MediaQuery.of(context).size.width / 3,
+            colorList: const [
+              Color.fromARGB(255, 27, 254, 122),
+              Color.fromARGB(255, 255, 74, 74)
+            ],
+            chartValuesOptions: ChartValuesOptions(
+              showChartValues: true,
+              showChartValuesInPercentage: false,
+              showChartValuesOutside: false,
+              decimalPlaces: 1,
+              chartValueStyle: defaultChartValueStyle.copyWith(
+                color: Colors.black,
+              ),
+            ),
+            initialAngleInDegree: 0,
+          ),
+    const SizedBox(height: 16.0), // Espaçamento após o gráfico de pizza
               // Exibir o número de clientes cadastrados
-              Text(
-                'Clientes Cadastrados: $numeroClientes',
-                style: const TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF025162),
+              ElevatedButton.icon(
+                onPressed: () {}, // Não precisa de ação
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 92, 230, 156),
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                icon: const Padding(
+                    padding: EdgeInsets.only(left: 16.0), // Ajuste o valor aqui
+                    child: Icon(
+                      Icons.people,
+                      color: Color(0xFF025162),
+                    ),
+                  ),
+                label: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Clientes Cadastrados: $numeroClientes',
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        color: Color(0xFF025162),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Text(
-                'Receita em reservas: $numeroClientes',
-                style: const TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF025162),
+              const SizedBox(height: 16.0), 
+              // Exibir a receita em reservas
+              ElevatedButton.icon(
+                onPressed: () {}, // Não precisa de ação
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 92, 230, 156),
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                icon: const Padding(
+                    padding: EdgeInsets.only(left: 16.0), // Ajuste o valor aqui
+                    child: Icon(
+                      Icons.attach_money,
+                      color: Color(0xFF025162),
+                    ),
+                  ),
+                label: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Receita em Reservas: \$${receitaEmReservas.toStringAsFixed(2)}', // Formatar para 2 casas decimais
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        color: Color(0xFF025162),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16.0),
-
+              const SizedBox(height: 16.0), 
+              
               // Botão Lista de Clientes
               SizedBox(
                 width: double.infinity, // Botões com largura total
