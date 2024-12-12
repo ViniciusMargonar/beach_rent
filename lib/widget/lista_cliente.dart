@@ -1,8 +1,8 @@
-import 'package:beach_rent/aplicacao/a_cliente.dart';
 import 'package:flutter/material.dart';
-import 'detalhes_cliente.dart';
-import 'package:beach_rent/dominio/dto/dto_cliente.dart';
+import 'package:beach_rent/aplicacao/a_cliente.dart';
 import 'package:beach_rent/banco/sqlite/dao_cliente.dart';
+import 'package:beach_rent/dominio/dto/dto_cliente.dart';
+import 'detalhes_cliente.dart';
 
 class ListaCliente extends StatefulWidget {
   const ListaCliente({super.key});
@@ -17,7 +17,76 @@ class _ListaClienteState extends State<ListaCliente> {
   @override
   void initState() {
     super.initState();
-    _clientesFuture = ACliente.consultarClientes(); // Inicializa a lista de clientes
+    _clientesFuture = ACliente.consultarClientes();
+  }
+
+  // Função para exibir o formulário de atualização
+  void _atualizarCliente(DTOCliente cliente) {
+    final TextEditingController nomeController = TextEditingController(text: cliente.nome);
+    final TextEditingController emailController = TextEditingController(text: cliente.email);
+    final TextEditingController telefoneController = TextEditingController(text: cliente.telefone);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Atualizar Cliente'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nomeController,
+                decoration: const InputDecoration(labelText: 'Nome'),
+              ),
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+              ),
+              TextField(
+                controller: telefoneController,
+                decoration: const InputDecoration(labelText: 'Telefone'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Atualizar cliente
+                cliente.nome = nomeController.text;
+                cliente.email = emailController.text;
+                cliente.telefone = telefoneController.text;
+
+                try {
+                  DAOCliente daoCliente = DAOCliente();
+                  await daoCliente.atualizar(cliente);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Cliente "${cliente.nome}" atualizado com sucesso!'),
+                    ),
+                  );
+
+                  // Atualizar a lista
+                  setState(() {});
+                  Navigator.of(context).pop();
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Erro ao atualizar cliente: $e'),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Atualizar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -30,8 +99,7 @@ class _ListaClienteState extends State<ListaCliente> {
       ),
       body: FutureBuilder<List<DTOCliente>>(
         future: _clientesFuture,
-        builder:
-            (BuildContext context, AsyncSnapshot<List<DTOCliente>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<DTOCliente>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
@@ -68,7 +136,7 @@ class _ListaClienteState extends State<ListaCliente> {
                     ),
                   ),
                   subtitle: Text(
-                    cliente.email,
+                    'Telefone: ${cliente.telefone}',
                     style: const TextStyle(
                       fontSize: 14.0,
                       color: Color(0xFF025162), // Azul escuro
@@ -129,6 +197,15 @@ class _ListaClienteState extends State<ListaCliente> {
                               );
                             }
                           }
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Color(0xFF025162), // Azul escuro
+                        ),
+                        onPressed: () {
+                          _atualizarCliente(cliente);
                         },
                       ),
                       const Icon(

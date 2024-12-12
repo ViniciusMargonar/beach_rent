@@ -20,6 +20,89 @@ class _ListaQuadraState extends State<ListaQuadra> {
     _quadrasFuture = AQuadra.consultarQuadras();
   }
 
+  // Função para exibir o formulário de atualização
+  void _atualizarQuadra(DTOQuadra quadra) {
+    final TextEditingController nomeController = TextEditingController(text: quadra.nome);
+    final TextEditingController precoController = TextEditingController(text: quadra.precoPorHora.toString());
+    final TextEditingController tipoDePisoController = TextEditingController(text: quadra.tipoDePiso);
+    final TextEditingController descricaoController = TextEditingController(text: quadra.descricao);
+    final TextEditingController capacidadeController = TextEditingController(text: quadra.capacidadeDeJogadores.toString());
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Atualizar Quadra'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nomeController,
+                decoration: const InputDecoration(labelText: 'Nome'),
+              ),
+              TextField(
+                controller: precoController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Preço por Hora'),
+              ),
+              TextField(
+                controller: tipoDePisoController,
+                decoration: const InputDecoration(labelText: 'Tipo de Piso'),
+              ),
+              TextField(
+                controller: descricaoController,
+                decoration: const InputDecoration(labelText: 'Descrição'),
+              ),
+              TextField(
+                controller: capacidadeController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Capacidade de Jogadores'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Atualizar quadra
+                quadra.nome = nomeController.text;
+                quadra.precoPorHora = double.tryParse(precoController.text) ?? quadra.precoPorHora;
+                quadra.tipoDePiso = tipoDePisoController.text;
+                quadra.descricao = descricaoController.text;
+                quadra.capacidadeDeJogadores = int.tryParse(capacidadeController.text) ?? quadra.capacidadeDeJogadores;
+
+                try {
+                  DAOQuadra daoQuadra = DAOQuadra();
+                  await daoQuadra.atualizar(quadra);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Quadra "${quadra.nome}" atualizada com sucesso!'),
+                    ),
+                  );
+
+                  // Atualizar a lista
+                  setState(() {});
+                  Navigator.of(context).pop();
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Erro ao atualizar quadra: $e'),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Atualizar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,6 +211,15 @@ class _ListaQuadraState extends State<ListaQuadra> {
                               );
                             }
                           }
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Color(0xFF025162), // Azul escuro
+                        ),
+                        onPressed: () {
+                          _atualizarQuadra(quadra);
                         },
                       ),
                       const Icon(

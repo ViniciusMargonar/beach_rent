@@ -29,5 +29,20 @@ class DAOCliente implements IDAOCliente {
     var result = await _db.rawQuery('SELECT COUNT(*) FROM cliente');
     return Sqflite.firstIntValue(result) ?? 0; // Retorna 0 caso não haja clientes
   }
+
+   @override
+  Future<int> atualizar(DTOCliente dto) async {
+    _db = await Conexao.abrir();
+    return await _db.rawUpdate(
+      'UPDATE cliente SET nome = ?, email = ?, telefone = ?, senha = ? WHERE id = ?',
+      [
+        dto.nome,
+        dto.email,
+        dto.telefone,
+        dto.senha,
+        dto.id
+      ]
+    );
+  }
 }
 

@@ -82,41 +82,41 @@ class _HomePageState extends State<HomePage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    // Título acima do gráfico de pizza
-    const Text(
-      'Disponibilidade das Quadras',
-      style: TextStyle(
-        fontSize: 18.0,
-        fontWeight: FontWeight.bold,
-        color: Color(0xFF025162),
-      ),
-    ),
-    const SizedBox(height: 16.0), // Espaçamento entre o título e o gráfico de pizza
-    // Exibir o gráfico de pizza com os dados atualizados
-    dataMap.isEmpty
-        ? const CircularProgressIndicator()
-        : PieChart(
-            dataMap: dataMap,
-            chartType: ChartType.disc,
-            chartRadius: MediaQuery.of(context).size.width / 3,
-            colorList: const [
-              Color.fromARGB(255, 27, 254, 122),
-              Color.fromARGB(255, 255, 74, 74)
-            ],
-            chartValuesOptions: ChartValuesOptions(
-              showChartValues: true,
-              showChartValuesInPercentage: false,
-              showChartValuesOutside: false,
-              decimalPlaces: 1,
-              chartValueStyle: defaultChartValueStyle.copyWith(
-                color: Colors.black,
-              ),
-            ),
-            initialAngleInDegree: 0,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // Título acima do gráfico de pizza
+        const Text(
+          'Disponibilidade das Quadras',
+          style: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF025162),
           ),
-    const SizedBox(height: 16.0), // Espaçamento após o gráfico de pizza
+        ),
+        const SizedBox(height: 16.0), // Espaçamento entre o título e o gráfico de pizza
+        // Exibir o gráfico de pizza com os dados atualizados
+        dataMap.isEmpty
+            ? const CircularProgressIndicator()
+            : PieChart(
+                dataMap: dataMap,
+                chartType: ChartType.disc,
+                chartRadius: MediaQuery.of(context).size.width / 3,
+                colorList: const [
+                  Color.fromARGB(255, 27, 254, 122),
+                  Color.fromARGB(255, 255, 74, 74)
+                ],
+                chartValuesOptions: ChartValuesOptions(
+                  showChartValues: true,
+                  showChartValuesInPercentage: false,
+                  showChartValuesOutside: false,
+                  decimalPlaces: 1,
+                  chartValueStyle: defaultChartValueStyle.copyWith(
+                    color: Colors.black,
+                  ),
+                ),
+                initialAngleInDegree: 0,
+              ),
+              const SizedBox(height: 16.0), // Espaçamento após o gráfico de pizza
               // Exibir o número de clientes cadastrados
               ElevatedButton.icon(
                 onPressed: () {}, // Não precisa de ação
