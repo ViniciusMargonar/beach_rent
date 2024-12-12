@@ -1,3 +1,4 @@
+import 'package:beach_rent/banco/sqlite/dao_cliente.dart';
 import 'package:beach_rent/banco/sqlite/dao_quadra.dart';
 import 'package:beach_rent/dominio/dto/dto_quadra.dart';
 import 'package:beach_rent/widget/login.dart';
@@ -17,31 +18,39 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Map<String, double> dataMap;
+  late Map<String, double> dataMap = {};
+  late int numeroClientes = 0;  // Variável para armazenar o número de clientes
 
   // Função para buscar quadras e atualizar o gráfico de pizza
   Future<void> fetchQuadras() async {
-  // Buscar todas as quadras cadastradas
-  var daoQuadra = DAOQuadra();
-  List<DTOQuadra> quadras = await daoQuadra.listarTodos();
+    var daoQuadra = DAOQuadra();
+    List<DTOQuadra> quadras = await daoQuadra.listarTodos();
 
-  // Contar a quantidade de quadras disponíveis e indisponíveis
-  int disponiveis = quadras.where((quadra) => quadra.disponibilidade).length;
-  int indisponiveis = quadras.length - disponiveis;
+    int disponiveis = quadras.where((quadra) => quadra.disponibilidade).length;
+    int indisponiveis = quadras.length - disponiveis;
 
-  // Atualizar os dados do gráfico de pizza
-  setState(() {
-    dataMap = {
-      "Disponíveis": disponiveis.toDouble(),
-      "Indisponíveis": indisponiveis.toDouble(),
-    };
-  });
-}
+    setState(() {
+      dataMap = {
+        "Disponíveis": disponiveis.toDouble(),
+        "Indisponíveis": indisponiveis.toDouble(),
+      };
+    });
+  }
+
+  // Função para buscar o número de clientes
+  Future<void> fetchNumeroClientes() async {
+    var daoCliente = DAOCliente();
+    int clientes = await daoCliente.contarClientes();
+    setState(() {
+      numeroClientes = clientes;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    fetchQuadras(); // Carregar os dados das quadras ao iniciar
+    fetchQuadras();
+    fetchNumeroClientes();  // Carregar o número de clientes ao iniciar
   }
 
   @override
@@ -71,8 +80,8 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Exibir o gráfico de pizza com os dados atualizados
-              dataMap == null
-                  ? const CircularProgressIndicator() // Exibir um carregamento enquanto os dados não são carregados
+              dataMap.isEmpty
+                  ? const CircularProgressIndicator()
                   : PieChart(
                       dataMap: dataMap,
                       chartType: ChartType.disc,
@@ -93,6 +102,25 @@ class _HomePageState extends State<HomePage> {
                       initialAngleInDegree: 0,
                     ),
               const SizedBox(height: 32.0), // Espaçamento após o gráfico de pizza
+
+              // Exibir o número de clientes cadastrados
+              Text(
+                'Clientes Cadastrados: $numeroClientes',
+                style: const TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF025162),
+                ),
+              ),
+              Text(
+                'Receita em reservas: $numeroClientes',
+                style: const TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF025162),
+                ),
+              ),
+              const SizedBox(height: 16.0),
 
               // Botão Lista de Clientes
               SizedBox(

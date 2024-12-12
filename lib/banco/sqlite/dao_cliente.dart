@@ -18,8 +18,16 @@ class DAOCliente implements IDAOCliente {
   }
 
   @override
-  Future<int> deletar(int id) async {  // Usando o int id
+  Future<int> deletar(int id) async {  
     _db = await Conexao.abrir();
     return await _db.rawDelete('DELETE FROM cliente WHERE id = ?', [id]);
   }
+
+  // Novo método para contar os clientes
+  Future<int> contarClientes() async {
+    _db = await Conexao.abrir();
+    var result = await _db.rawQuery('SELECT COUNT(*) FROM cliente');
+    return Sqflite.firstIntValue(result) ?? 0; // Retorna 0 caso não haja clientes
+  }
 }
+
