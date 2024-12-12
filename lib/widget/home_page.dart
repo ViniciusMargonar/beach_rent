@@ -1,22 +1,51 @@
-import 'package:beach_rent/widget/lista_cliente.dart';
+import 'package:beach_rent/banco/sqlite/dao_quadra.dart';
+import 'package:beach_rent/dominio/dto/dto_quadra.dart';
 import 'package:beach_rent/widget/login.dart';
 import 'package:flutter/material.dart';
-import 'package:pie_chart/pie_chart.dart';  // Importando o pacote PieChart
+import 'package:pie_chart/pie_chart.dart';
 import 'form_cliente.dart';
 import 'form_quadra.dart';
+import 'lista_cliente.dart';
 import 'lista_quadra.dart';
+import 'package:beach_rent/banco/sqlite/conexao.dart'; // Certifique-se de importar a classe de conexão
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Dados para o gráfico de pizza
-    Map<String, double> dataMap = {
-      "Disponíveis": 15,
-      "Indisponíveis": 8,
-    };
+  _HomePageState createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  late Map<String, double> dataMap;
+
+  // Função para buscar quadras e atualizar o gráfico de pizza
+  Future<void> fetchQuadras() async {
+  // Buscar todas as quadras cadastradas
+  var daoQuadra = DAOQuadra();
+  List<DTOQuadra> quadras = await daoQuadra.listarTodos();
+
+  // Contar a quantidade de quadras disponíveis e indisponíveis
+  int disponiveis = quadras.where((quadra) => quadra.disponibilidade).length;
+  int indisponiveis = quadras.length - disponiveis;
+
+  // Atualizar os dados do gráfico de pizza
+  setState(() {
+    dataMap = {
+      "Disponíveis": disponiveis.toDouble(),
+      "Indisponíveis": indisponiveis.toDouble(),
+    };
+  });
+}
+
+  @override
+  void initState() {
+    super.initState();
+    fetchQuadras(); // Carregar os dados das quadras ao iniciar
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -41,23 +70,28 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Adicionando o PieChart acima dos botões
-              PieChart(
-                dataMap: dataMap,
-                chartType: ChartType.disc,
-                chartRadius: MediaQuery.of(context).size.width / 3,
-                colorList: const [Color.fromARGB(255, 27, 254, 122), Color.fromARGB(255, 255, 74, 74)],
-                chartValuesOptions: ChartValuesOptions(
-                  showChartValues: true,
-                  showChartValuesInPercentage: false,
-                  showChartValuesOutside: false,
-                  decimalPlaces: 1,
-                  chartValueStyle: defaultChartValueStyle.copyWith(
-                    color: Colors.black,
-                  ),
-                ),
-                initialAngleInDegree: 0,
-              ),
+              // Exibir o gráfico de pizza com os dados atualizados
+              dataMap == null
+                  ? const CircularProgressIndicator() // Exibir um carregamento enquanto os dados não são carregados
+                  : PieChart(
+                      dataMap: dataMap,
+                      chartType: ChartType.disc,
+                      chartRadius: MediaQuery.of(context).size.width / 3,
+                      colorList: const [
+                        Color.fromARGB(255, 27, 254, 122),
+                        Color.fromARGB(255, 255, 74, 74)
+                      ],
+                      chartValuesOptions: ChartValuesOptions(
+                        showChartValues: true,
+                        showChartValuesInPercentage: false,
+                        showChartValuesOutside: false,
+                        decimalPlaces: 1,
+                        chartValueStyle: defaultChartValueStyle.copyWith(
+                          color: Colors.black,
+                        ),
+                      ),
+                      initialAngleInDegree: 0,
+                    ),
               const SizedBox(height: 32.0), // Espaçamento após o gráfico de pizza
 
               // Botão Lista de Clientes
@@ -122,7 +156,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   icon: const Padding(
-                    padding: EdgeInsets.only(left: 16.0), // Ajuste o valor aqui
+                    padding: EdgeInsets.only(left: 16.0),
                     child: Icon(
                       Icons.add_circle,
                       color: Color(0xFF025162),
@@ -164,7 +198,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   icon: const Padding(
-                    padding: EdgeInsets.only(left: 16.0), // Ajuste o valor aqui
+                    padding: EdgeInsets.only(left: 16.0),
                     child: Icon(
                       Icons.sports,
                       color: Color(0xFF025162),
@@ -206,7 +240,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   icon: const Padding(
-                    padding: EdgeInsets.only(left: 16.0), // Ajuste o valor aqui
+                    padding: EdgeInsets.only(left: 16.0),
                     child: Icon(
                       Icons.add_circle,
                       color: Color(0xFF025162),
